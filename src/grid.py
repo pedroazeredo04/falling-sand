@@ -24,6 +24,12 @@ class Vector2D:
     def tuple(self):
         return (self.x, self.y)
 
+    def __eq__(self, o):
+        return isinstance(o, Vector2D) and self.x == o.x and self.y == o.y
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
 
 class CellType(Enum):
     VOID = 0
@@ -37,32 +43,28 @@ class Grid:
         self.cols_ = cols
         self.grid_ = [[CellType.VOID for _ in range(cols)] for _ in range(rows)]
 
-    def place_sand(self, cell: Vector2D):
-        self.grid_[cell.y][cell.x] = CellType.SAND
+    def in_bounds(self, cell: Vector2D) -> bool:
+        return 0 <= cell.x < self.cols_ and 0 <= cell.y < self.rows_
 
-    def place_void(self, cell: Vector2D):
-        self.grid_[cell.y][cell.x] = CellType.VOID
+    def place(self, cell_type: CellType, cell: Vector2D):
+        self.grid_[cell.y][cell.x] = cell_type
 
-    def place_wall(self, cell: Vector2D):
-        self.grid_[cell.y][cell.x] = CellType.WALL
+    def idx_to_cell(self, idx: int) -> Vector2D:
+        cell_x = idx % self.cols_
+        cell_y = idx // self.cols_
+        return Vector2D(cell_x, cell_y)
 
-    def get_cell(self, cell:Vector2D) -> CellType:
-        if cell.y < 0 or cell.y >= self.rows_:
-            return CellType.WALL
-        
-        if cell.x < 0 or cell.x >= self.cols_:
+    def get_cell(self, cell: Vector2D) -> CellType:
+        if not self.in_bounds(cell):
             return CellType.WALL
 
         return self.grid_[cell.y][cell.x]
 
     def get_cell_index(self, cell: Vector2D) -> int:
-        if cell.y < 0 or cell.y >= self.rows_:
-            return -1
-        
-        if cell.x < 0 or cell.x >= self.cols_:
+        if not self.in_bounds(cell):
             return -1
 
         return cell.x + cell.y * self.cols_
 
     def is_empty(self, cell: Vector2D) -> bool:
-        return self.grid_[cell.y][cell.x] == CellType.VOID
+        return self.get_cell(cell) == CellType.VOID

@@ -49,7 +49,7 @@ class Render:
                 if pygame.mouse.get_pressed()[0]:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
-                    self.grid.place_sand(cell_vec)
+                    self.grid.place(CellType.SAND, cell_vec)
 
             self.screen.fill(color_dict["white"])
             self.draw_grid()
@@ -92,16 +92,3 @@ class Render:
         cell_y = int(mouse_y / self.pixels_per_cell_)
         return Vector2D(cell_x, cell_y)
 
-
-# # Set colors variables
-# line_color = (0, 0, 0)
-#
-# # Set display/screen variables
-# display_speed = 0.0025
-#
-# walker_position = Vector2D(screen_size.x/2, screen_size.y/2)
-# sides = int(input("Number of sides: "))
-#
-# # Initialize pygame variables
-#
-# # Create window
