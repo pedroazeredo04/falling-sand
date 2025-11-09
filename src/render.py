@@ -1,0 +1,107 @@
+import pygame
+
+from src.grid import Grid
+from src.grid import Vector2D
+from src.grid import CellType
+from src.sim import Simulation
+
+
+color_dict = {
+    "black": (0, 0, 0),
+    "white": (255, 255, 255),
+    "sand": (233, 189, 134),
+}
+
+
+class Render:
+    def __init__(self, window_w: int, window_h: int, pixels_per_cell: int):
+        self.window_w_ = window_w
+        self.window_h_ = window_h
+        self.pixels_per_cell_ = pixels_per_cell
+
+        self.rows = int(window_h / pixels_per_cell)
+        self.cols = int(window_w / pixels_per_cell)
+        self.grid = Grid(self.rows, self.cols)
+
+        self.sim = Simulation(self.grid)
+
+    def init_screen(self, background_color):
+        screen_size = (self.window_w_, self.window_h_)
+        self.screen = pygame.display.set_mode(screen_size)
+        pygame.display.set_caption("Random Walk")
+        self.screen.fill(background_color)
+
+    def run_sim(self):
+        self.running = True
+        self.pause = False
+        while self.running:
+            pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+                if event.type == pygame.KEYDOWN:
+                    self.pause = True if not self.pause else False
+
+            self.sim.step()
+
+            if not self.pause:
+                if pygame.mouse.get_pressed()[0]:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
+                    self.grid.place_sand(cell_vec)
+
+            self.screen.fill(color_dict["white"])
+            self.draw_grid()
+            self.draw_squares()
+            pygame.display.flip()
+
+    def draw_squares(self):
+        for i in range(self.cols + 1):
+            x_coord = self.pixels_per_cell_ * i
+            pygame.draw.line(
+                self.screen,
+                color_dict["black"],
+                (x_coord, 0),
+                (x_coord, self.window_h_),
+            )
+
+        for j in range(self.rows + 1):
+            y_coord = self.pixels_per_cell_ * j
+            pygame.draw.line(
+                self.screen,
+                color_dict["black"],
+                (0, y_coord),
+                (self.window_w_, y_coord),
+            )
+
+    def draw_grid(self):
+        for y in range(self.rows):
+            for x in range(self.cols):
+                if self.grid.grid_[y][x] == CellType.SAND:
+                    rec = pygame.Rect(
+                        x * self.pixels_per_cell_,
+                        y * self.pixels_per_cell_,
+                        self.pixels_per_cell_,
+                        self.pixels_per_cell_,
+                    )
+                    pygame.draw.rect(self.screen, color_dict["sand"], rec, 5)
+
+    def get_mouse_cell(self, mouse_x: float, mouse_y: float) -> Vector2D:
+        cell_x = int(mouse_x / self.pixels_per_cell_)
+        cell_y = int(mouse_y / self.pixels_per_cell_)
+        return Vector2D(cell_x, cell_y)
+
+
+# # Set colors variables
+# line_color = (0, 0, 0)
+#
+# # Set display/screen variables
+# display_speed = 0.0025
+#
+# walker_position = Vector2D(screen_size.x/2, screen_size.y/2)
+# sides = int(input("Number of sides: "))
+#
+# # Initialize pygame variables
+#
+# # Create window
