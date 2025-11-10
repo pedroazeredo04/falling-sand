@@ -48,6 +48,8 @@ class Grid:
         return 0 <= cell.x < self.cols_ and 0 <= cell.y < self.rows_
 
     def place(self, cell_type: CellType, cell: Vector2D):
+        if not self.in_bounds(cell):
+            return
         self.grid_[cell.y][cell.x] = cell_type
 
     def idx_to_cell(self, idx: int) -> Vector2D:

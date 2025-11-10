@@ -117,7 +117,7 @@ class Render:
                         self.pixels_per_cell_,
                         self.pixels_per_cell_,
                     )
-                    pygame.draw.rect(self.screen, color_dict["sand"], rec, 5)
+                    pygame.draw.rect(self.screen, color_dict["sand"], rec)
 
                 if self.grid.grid_[y][x] == CellType.WATER:
                     rec = pygame.Rect(
@@ -126,7 +126,7 @@ class Render:
                         self.pixels_per_cell_,
                         self.pixels_per_cell_,
                     )
-                    pygame.draw.rect(self.screen, color_dict["water"], rec, 5)
+                    pygame.draw.rect(self.screen, color_dict["water"], rec)
 
                 if self.grid.grid_[y][x] == CellType.WALL:
                     rec = pygame.Rect(
@@ -135,7 +135,7 @@ class Render:
                         self.pixels_per_cell_,
                         self.pixels_per_cell_,
                     )
-                    pygame.draw.rect(self.screen, color_dict["wall"], rec, 5)
+                    pygame.draw.rect(self.screen, color_dict["wall"], rec)
 
     def get_mouse_cell(self, mouse_x: float, mouse_y: float) -> Vector2D:
         cell_x = int(mouse_x / self.pixels_per_cell_)
