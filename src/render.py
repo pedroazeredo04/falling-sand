@@ -10,6 +10,8 @@ color_dict = {
     "black": (0, 0, 0),
     "white": (255, 255, 255),
     "sand": (233, 189, 134),
+    "water": (0, 21, 234),
+    "wall": (0, 0, 0,),
 }
 
 
@@ -41,11 +43,38 @@ class Render:
                     self.running = False
 
                 if event.type == pygame.KEYDOWN:
-                    self.pause = True if not self.pause else False
+                    if event.key == pygame.K_p:
+                        self.pause = True if not self.pause else False
 
-            self.sim.step()
+            pressed_keys = pygame.key.get_pressed()
+            
+            if pressed_keys[pygame.K_w]:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
+                self.grid.place(CellType.WATER, cell_vec)
+
+            if pressed_keys[pygame.K_s]:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
+                self.grid.place(CellType.SAND, cell_vec)
+
+            if pressed_keys[pygame.K_b]:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
+                self.grid.place(CellType.WALL, cell_vec)
+
+            if pressed_keys[pygame.K_BACKSPACE]:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
+                self.grid.place(CellType.VOID, cell_vec)
+
+            if pressed_keys[pygame.K_ESCAPE]:
+                self.grid = Grid(self.rows, self.cols)
+                self.sim = Simulation(self.grid)
+
 
             if not self.pause:
+                self.sim.step()
                 if pygame.mouse.get_pressed()[0]:
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
@@ -87,8 +116,25 @@ class Render:
                     )
                     pygame.draw.rect(self.screen, color_dict["sand"], rec, 5)
 
+                if self.grid.grid_[y][x] == CellType.WATER:
+                    rec = pygame.Rect(
+                        x * self.pixels_per_cell_,
+                        y * self.pixels_per_cell_,
+                        self.pixels_per_cell_,
+                        self.pixels_per_cell_,
+                    )
+                    pygame.draw.rect(self.screen, color_dict["water"], rec, 5)
+
+                if self.grid.grid_[y][x] == CellType.WALL:
+                    rec = pygame.Rect(
+                        x * self.pixels_per_cell_,
+                        y * self.pixels_per_cell_,
+                        self.pixels_per_cell_,
+                        self.pixels_per_cell_,
+                    )
+                    pygame.draw.rect(self.screen, color_dict["wall"], rec, 5)
+
     def get_mouse_cell(self, mouse_x: float, mouse_y: float) -> Vector2D:
         cell_x = int(mouse_x / self.pixels_per_cell_)
         cell_y = int(mouse_y / self.pixels_per_cell_)
         return Vector2D(cell_x, cell_y)
-

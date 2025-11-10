@@ -35,6 +35,7 @@ class CellType(Enum):
     VOID = 0
     SAND = 1
     WALL = 2
+    WATER = 3
 
 
 class Grid:

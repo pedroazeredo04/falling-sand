@@ -13,7 +13,7 @@ class Simulation:
         self.changes_.append((cell_origin, cell_destiny))
 
     def commit_changes(self):
-    # Filter out invalid moves (destinations not empty at the moment of decision)
+        # Filter out invalid moves (destinations not empty at the moment of decision)
         valid_moves = []
         for origin, dest in self.changes_:
             if self.grid_.get_cell(dest) == CellType.VOID:
@@ -25,7 +25,10 @@ class Simulation:
         # Apply all moves now
         for origin, dest in valid_moves:
             cell_type = self.grid_.get_cell(origin)
-            if cell_type == CellType.SAND and self.grid_.get_cell(dest) == CellType.VOID:
+            if (
+                cell_type != CellType.VOID
+                and self.grid_.get_cell(dest) == CellType.VOID
+            ):
                 self.grid_.place(cell_type, dest)
                 self.grid_.place(CellType.VOID, origin)
 
@@ -44,8 +47,21 @@ class Simulation:
 
                     if self.grid_.is_empty(pos + delta_y):
                         self.move_cell(pos, pos + delta_y)
-                    elif self.grid_.is_empty(pos + delta_y + lateral):
+                    elif self.grid_.is_empty(pos + delta_y + lateral) and self.grid_.is_empty(pos + lateral):
                         self.move_cell(pos, pos + delta_y + lateral)
-                    elif self.grid_.is_empty(pos + delta_y - lateral):
+                    elif self.grid_.is_empty(pos + delta_y - lateral) and self.grid_.is_empty(pos - lateral):
                         self.move_cell(pos, pos + delta_y - lateral)
+
+                if self.grid_.get_cell(pos) == CellType.WATER:
+                    delta_y = Vector2D(0, 1)
+                    right = Vector2D(1, 0)
+                    left = Vector2D(-1, 0)
+                    lateral = right if random.getrandbits(1) else left
+
+                    if self.grid_.is_empty(pos + delta_y):
+                        self.move_cell(pos, pos + delta_y)
+                    elif self.grid_.is_empty(pos + lateral):
+                        self.move_cell(pos, pos + lateral)
+                    elif self.grid_.is_empty(pos - lateral):
+                        self.move_cell(pos, pos - lateral)
         self.commit_changes()
