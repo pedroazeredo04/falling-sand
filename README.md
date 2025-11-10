@@ -14,10 +14,10 @@ You only need Pygame and than you do `python3 main.py`
 
 There are some options for the player to do:
 
-`S`: Place sand at mouse position
-`W`: Place water at mouse position
-`B`: Place block cell at mouse position
-`BACKSPACE`: Delete cell at mouse position
-`ESC`: Clear screen
-`P`: Pause/unpause simulation (you can still place stuff :) )
+- `S`: Place sand at mouse position
+- `W`: Place water at mouse position
+- `B`: Place block cell at mouse position
+- `BACKSPACE`: Delete cell at mouse position
+- `ESC`: Clear screen
+- `P`: Pause/unpause simulation (you can still place stuff :) )
 
