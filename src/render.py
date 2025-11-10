@@ -11,11 +11,7 @@ color_dict = {
     "white": (255, 255, 255),
     "sand": (233, 189, 134),
     "water": (0, 21, 234),
-    "wall": (
-        0,
-        0,
-        0,
-    ),
+    "wall": (0, 0, 0),
 }
 
 
@@ -78,10 +74,6 @@ class Render:
 
             if not self.pause:
                 self.sim.step()
-                if pygame.mouse.get_pressed()[0]:
-                    mouse_x, mouse_y = pygame.mouse.get_pos()
-                    cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
-                    self.grid.place(CellType.SAND, cell_vec)
 
             self.screen.fill(color_dict["white"])
             self.draw_grid()
