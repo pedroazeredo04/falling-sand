@@ -1,5 +1,4 @@
 from src.render import Render
-from src.grid import Grid
 from src.grid import Vector2D
 
 

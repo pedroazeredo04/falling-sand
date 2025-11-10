@@ -11,7 +11,11 @@ color_dict = {
     "white": (255, 255, 255),
     "sand": (233, 189, 134),
     "water": (0, 21, 234),
-    "wall": (0, 0, 0,),
+    "wall": (
+        0,
+        0,
+        0,
+    ),
 }
 
 
@@ -47,7 +51,7 @@ class Render:
                         self.pause = True if not self.pause else False
 
             pressed_keys = pygame.key.get_pressed()
-            
+
             if pressed_keys[pygame.K_w]:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 cell_vec = self.get_mouse_cell(mouse_x, mouse_y)
@@ -71,7 +75,6 @@ class Render:
             if pressed_keys[pygame.K_ESCAPE]:
                 self.grid = Grid(self.rows, self.cols)
                 self.sim = Simulation(self.grid)
-
 
             if not self.pause:
                 self.sim.step()

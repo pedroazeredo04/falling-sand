@@ -47,9 +47,13 @@ class Simulation:
 
                     if self.grid_.is_empty(pos + delta_y):
                         self.move_cell(pos, pos + delta_y)
-                    elif self.grid_.is_empty(pos + delta_y + lateral) and self.grid_.is_empty(pos + lateral):
+                    elif self.grid_.is_empty(
+                        pos + delta_y + lateral
+                    ) and self.grid_.is_empty(pos + lateral):
                         self.move_cell(pos, pos + delta_y + lateral)
-                    elif self.grid_.is_empty(pos + delta_y - lateral) and self.grid_.is_empty(pos - lateral):
+                    elif self.grid_.is_empty(
+                        pos + delta_y - lateral
+                    ) and self.grid_.is_empty(pos - lateral):
                         self.move_cell(pos, pos + delta_y - lateral)
 
                 if self.grid_.get_cell(pos) == CellType.WATER:
